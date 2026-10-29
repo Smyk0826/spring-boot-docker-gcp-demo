@@ -29,3 +29,6 @@ steps:
 
 images:
   - asia-south2-docker.pkg.dev/gcp-demo-513116/spring-apps/demo-app:$COMMIT_SHA
+
+options:
+  logging: CLOUD_LOGGING_ONLY
