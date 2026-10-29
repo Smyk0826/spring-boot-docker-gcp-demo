@@ -1,0 +1,31 @@
+
+steps:
+  # 1. Build the Docker image
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - asia-south2-docker.pkg.dev/gcp-demo-513116/spring-apps/demo-app:$COMMIT_SHA
+      - .
+
+  # 2. Push the image to Artifact Registry
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - asia-south2-docker.pkg.dev/gcp-demo-513116/spring-apps/demo-app:$COMMIT_SHA
+
+  # 3. Deploy the image to Cloud Run
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - demo-app
+      - --image=asia-south2-docker.pkg.dev/gcp-demo-513116/spring-apps/demo-app:$COMMIT_SHA
+      - --region=asia-south2
+      - --platform=managed
+      - --allow-unauthenticated
+      - --quiet
+
+images:
+  - asia-south2-docker.pkg.dev/gcp-demo-513116/spring-apps/demo-app:$COMMIT_SHA
